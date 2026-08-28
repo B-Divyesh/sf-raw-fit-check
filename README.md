@@ -42,6 +42,8 @@ Use a reviewed custom registry (same schema as `registry/compatibility.json`):
 raw-fit-check check sample.ARW --registry team-registry.json --json
 ```
 
+Registry changes should be narrow: use the exact camera make/model strings written by the file, a normalized editor slug, an explicit version range and platform list, and a first-party evidence URL with an access date. Unsupported claims require affirmative evidence or a clearly dated absence from an exhaustive vendor list. Increment `registry_version` whenever a claim changes.
+
 Exit codes are `0` when every file is usable, `2` when any file is preview-only, `3` when any file is unsupported, and `1` for invalid input or an unreadable registry. `--ci` disables decorative output; the CLI never prompts.
 
 ## What a verdict means
