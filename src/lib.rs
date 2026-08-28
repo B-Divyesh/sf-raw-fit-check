@@ -456,20 +456,21 @@ fn find_best_jpeg(data: &[u8]) -> Option<JpegCandidate> {
     let mut found = Vec::new();
     let mut i = 0;
     while i + 3 < data.len() {
-        if data[i] == 0xff && data[i + 1] == 0xd8 {
-            if let Some(relative_end) = data[i + 2..].windows(2).position(|w| w == [0xff, 0xd9]) {
-                let end = i + 2 + relative_end + 2;
-                if let Some((width, height)) = jpeg_dimensions(&data[i..end]) {
-                    found.push(JpegCandidate {
-                        start: i,
-                        end,
-                        width,
-                        height,
-                    });
-                }
-                i = end;
-                continue;
+        if data[i] == 0xff
+            && data[i + 1] == 0xd8
+            && let Some(relative_end) = data[i + 2..].windows(2).position(|w| w == [0xff, 0xd9])
+        {
+            let end = i + 2 + relative_end + 2;
+            if let Some((width, height)) = jpeg_dimensions(&data[i..end]) {
+                found.push(JpegCandidate {
+                    start: i,
+                    end,
+                    width,
+                    height,
+                });
             }
+            i = end;
+            continue;
         }
         i += 1;
     }
@@ -636,13 +637,13 @@ fn type_size(kind: u16) -> Option<usize> {
     }
 }
 
-fn ifd_value_slice<'a>(
-    data: &'a [u8],
+fn ifd_value_slice(
+    data: &[u8],
     entry: usize,
     kind: u16,
     count: usize,
     little: bool,
-) -> Option<&'a [u8]> {
+) -> Option<&[u8]> {
     let bytes = type_size(kind)?.checked_mul(count)?;
     let start = if bytes <= 4 {
         entry + 8
@@ -780,7 +781,7 @@ mod tests {
         fs::write(&path, synthetic_raw()).unwrap();
         let registry = load_registry(None).unwrap();
         let report = run_check(
-            &[path.clone()],
+            std::slice::from_ref(&path),
             &registry,
             &CheckOptions {
                 editor: Some("darktable"),

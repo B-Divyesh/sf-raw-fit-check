@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite --config site/vite.config.js",
-    "test": "npm run test:unit && npm run build:site && node tests/e2e.mjs",
+    "test": "npm run lint && npm run test:unit && npm run build:site && node tests/build-policy.mjs && node tests/e2e.mjs",
     "test:unit": "node --test tests/analyzer.test.mjs",
+    "lint": "cargo fmt --check && cargo clippy --all-targets -- -D warnings",
     "build:site": "vite build --config site/vite.config.js",
     "build:cli": "cargo build --release",
     "build": "npm run build:cli && npm run build:site",

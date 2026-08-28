@@ -59,14 +59,17 @@ Start with 2–5 representative files, including each compression mode used in-c
 ```sh
 cargo test
 cargo build --release
-npm install
+npm ci
+npm run lint             # cargo fmt + Clippy with warnings denied
 npm test
 npm run build:site       # static site -> dist/site
 npm run build            # release CLI + static site
 npm run package:cli      # archives the local release binary in dist/
 ```
 
-The browser preflight on the landing page performs the same conservative header/preview checks entirely in-browser. It is useful for a quick sample; the CLI adds directory traversal, registry overrides, extraction, benchmarking, and stable JSON.
+The browser preflight on the landing page performs the same conservative header/preview checks entirely in-browser. It is useful for a quick sample; the CLI adds directory traversal, registry overrides, extraction, benchmarking, and stable JSON. The production build generates a versioned service-worker precache that includes the emitted hashed JavaScript and CSS, so the local checker still works after an offline reload.
+
+Deploy the contents of `dist/site/` unchanged. It includes both `_headers` and `staticwebapp.config.json`, which set immutable caching for hashed assets, keep `sw.js` updateable, and apply the site’s `no-referrer` and permissions policies.
 
 ## Repository map
 
