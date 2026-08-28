@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "registry_version": "2026.08.1",
+  "updated": "2026-08-28",
+  "rules": [
+    {
+      "id": "darktable-4.6-sony-ilce-6700",
+      "camera_make": "SONY",
+      "camera_model": "ILCE-6700",
+      "extensions": ["arw"],
+      "editor": "darktable",
+      "min_version": "4.6.0",
+      "platforms": ["linux", "windows", "macos"],
+      "outcome": "usable",
+      "note": "Camera support is listed in the darktable 4.6 release notes; the platform must also be supported by that editor build.",
+      "evidence": {
+        "title": "darktable 4.6.0 released",
+        "url": "https://www.darktable.org/2023/12/darktable-4.6.0-released/",
+        "accessed": "2026-08-28"
+      }
+    },
+    {
+      "id": "darktable-3.8-nikon-z6ii",
+      "camera_make": "NIKON CORPORATION",
+      "camera_model": "NIKON Z 6_2",
+      "extensions": ["nef"],
+      "editor": "darktable",
+      "min_version": "3.8.0",
+      "platforms": ["linux", "windows", "macos"],
+      "outcome": "usable",
+      "note": "Camera support is listed in the darktable 3.8 release notes. Embedded preview geometry is tested separately by RAW Fit Check.",
+      "evidence": {
+        "title": "darktable 3.8.0 released",
+        "url": "https://www.darktable.org/2021/12/darktable-3.8.0-released/",
+        "accessed": "2026-08-28"
+      }
+    },
+    {
+      "id": "apple-raw-macos13-sony-a6700",
+      "camera_make": "SONY",
+      "camera_model": "ILCE-6700",
+      "extensions": ["arw"],
+      "editor": "apple-photos",
+      "min_version": "13.0",
+      "platforms": ["macos"],
+      "outcome": "usable",
+      "note": "Apple lists Sony Alpha ILCE-6700 for macOS Ventura 13 RAW support; the editor version here means the macOS major version.",
+      "evidence": {
+        "title": "Digital camera RAW formats supported by iOS 17, iPadOS 17, macOS Sonoma, and macOS Ventura",
+        "url": "https://support.apple.com/en-us/105094",
+        "accessed": "2026-08-28"
+      }
+    },
+    {
+      "id": "apple-raw-macos12-sony-a6700",
+      "camera_make": "SONY",
+      "camera_model": "ILCE-6700",
+      "extensions": ["arw"],
+      "editor": "apple-photos",
+      "max_version": "12.99",
+      "platforms": ["macos"],
+      "outcome": "unsupported",
+      "note": "Apple's Monterey RAW list does not include the later Sony ILCE-6700. Use an embedded preview only or a different supported decoder.",
+      "evidence": {
+        "title": "Digital camera RAW formats supported by iOS 15, iPadOS 15, and macOS Monterey",
+        "url": "https://support.apple.com/en-us/HT212821",
+        "accessed": "2026-08-28"
+      }
+    }
+  ]
+}
