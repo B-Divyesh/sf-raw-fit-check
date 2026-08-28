@@ -1,0 +1,8 @@
+{
+  "prompt": "Neo-brutalist editorial still life for a RAW photo compatibility diagnostic; overhead view of an unbranded black camera memory card, a cream contact sheet with crop marks, a small waveform diagnostic strip, hard ink outlines, warm paper background, inspection yellow and cobalt blue accents, coarse screenprint texture, asymmetrical horizontal composition, no people, no logos, no letters, no readable text, no gradients, generous negative space",
+  "deployment": "factory-image",
+  "size": "1536x1024",
+  "quality": "high",
+  "generated_with": "/opt/fleet/lib/gen-image.sh",
+  "optimized_asset": "site/public/raw-bench.webp"
+}

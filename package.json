@@ -1,0 +1,20 @@
+{
+  "name": "raw-fit-check-site",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --config site/vite.config.js",
+    "test": "npm run test:unit && npm run build:site && node tests/e2e.mjs",
+    "test:unit": "node --test tests/analyzer.test.mjs",
+    "build:site": "vite build --config site/vite.config.js",
+    "build:cli": "cargo build --release",
+    "build": "npm run build:cli && npm run build:site",
+    "package:cli": "node scripts/package-cli.mjs"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.10.2",
+    "playwright": "1.58.2",
+    "vite": "7.3.6"
+  }
+}
