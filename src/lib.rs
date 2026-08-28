@@ -65,6 +65,17 @@ impl Verdict {
     }
 }
 
+impl std::fmt::Display for Verdict {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let value = match self {
+            Self::Usable => "usable",
+            Self::PreviewOnly => "preview-only",
+            Self::Unsupported => "unsupported",
+        };
+        formatter.write_str(value)
+    }
+}
+
 #[derive(Debug, Clone, Serialize)]
 pub struct PreviewReport {
     pub offset: usize,
@@ -179,6 +190,12 @@ fn collect_one(
         return Err(format!("input does not exist: {}", path.display()));
     }
     if path.is_dir() {
+        if fs::symlink_metadata(path)
+            .map(|metadata| metadata.file_type().is_symlink())
+            .unwrap_or(false)
+        {
+            return Ok(());
+        }
         for entry in
             fs::read_dir(path).map_err(|e| format!("could not read {}: {e}", path.display()))?
         {

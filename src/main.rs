@@ -139,7 +139,7 @@ fn print_registry(registry: &Registry, json: bool) -> Result<(), String> {
             _ => "any".into(),
         };
         println!(
-            "{}  {:?}\n  {} {} · {} · {}\n  Evidence: {}\n  {}\n",
+            "{}  {}\n  {} {} · {} · {}\n  Evidence: {}\n  {}\n",
             rule.id,
             rule.outcome,
             rule.editor,
@@ -171,7 +171,7 @@ fn print_human(report: &raw_fit_check::CheckReport, _ci: bool) {
             Verdict::PreviewOnly => "[VIEW]",
             Verdict::Unsupported => "[STOP]",
         };
-        println!("{symbol} {} — {:?}", file.path, file.verdict);
+        println!("{symbol} {} — {}", file.path, file.verdict);
         println!(
             "  Camera: {} {} · {}",
             file.camera_make.as_deref().unwrap_or("unknown"),
@@ -197,7 +197,7 @@ fn print_human(report: &raw_fit_check::CheckReport, _ci: bool) {
         }
         println!();
     }
-    println!("OVERALL: {:?}", report.overall);
+    println!("OVERALL: {}", report.overall);
     match report.overall {
         Verdict::Usable => println!(
             "Next: import this small sample and verify one edit + export before moving the full shoot."

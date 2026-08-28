@@ -20,18 +20,18 @@
       }
     },
     {
-      "id": "darktable-3.8-nikon-z6ii",
+      "id": "darktable-3.6-nikon-z6ii",
       "camera_make": "NIKON CORPORATION",
       "camera_model": "NIKON Z 6_2",
       "extensions": ["nef"],
       "editor": "darktable",
-      "min_version": "3.8.0",
+      "min_version": "3.6.0",
       "platforms": ["linux", "windows", "macos"],
       "outcome": "usable",
-      "note": "Camera support is listed in the darktable 3.8 release notes. Embedded preview geometry is tested separately by RAW Fit Check.",
+      "note": "Camera support is listed in the darktable 3.6 release notes. Embedded preview geometry is tested separately by RAW Fit Check.",
       "evidence": {
-        "title": "darktable 3.8.0 released",
-        "url": "https://www.darktable.org/2021/12/darktable-3.8.0-released/",
+        "title": "darktable 3.6.0 released",
+        "url": "https://www.darktable.org/2021/07/darktable-3.6.0-released/",
         "accessed": "2026-08-28"
       }
     },
@@ -63,7 +63,7 @@
       "note": "Apple's Monterey RAW list does not include the later Sony ILCE-6700. Use an embedded preview only or a different supported decoder.",
       "evidence": {
         "title": "Digital camera RAW formats supported by iOS 15, iPadOS 15, and macOS Monterey",
-        "url": "https://support.apple.com/en-us/HT212821",
+        "url": "https://support.apple.com/en-us/103234",
         "accessed": "2026-08-28"
       }
     }
