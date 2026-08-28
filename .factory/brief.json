@@ -1,0 +1,22 @@
+{
+  "slug": "raw-fit-check",
+  "title": "RAW Fit Check",
+  "territory": "utilities",
+  "user": "Photographers on older or modest computers who need to decide whether their camera RAW files will be viewable and workable before changing editors or hardware.",
+  "evidence": [
+    {
+      "url": "https://github.com/immich-app/immich/issues/29319",
+      "date": "2026-06-25",
+      "quote_or_summary": "A Nikon Z6II external library using embedded RAW previews displays an incorrect aspect ratio in web view, undermining confidence while evaluating a new photo system."
+    },
+    {
+      "url": "https://photo.stackexchange.com/questions/136620/photo-editing-software-that-works-on-macos-12-7",
+      "date": "2025-05-20",
+      "quote_or_summary": "An owner of a Sony a6700 and a 2015 Mac asks which software can process the camera's RAW files when vendor software and current Lightroom are unsupported."
+    }
+  ],
+  "smallest_useful_product": "Local diagnostic that samples RAW files, extracts embedded previews and codec/camera identifiers, checks them against a transparent compatibility registry, and runs a tiny render/view benchmark.",
+  "artifact_class": "cli",
+  "monetization": "free",
+  "constraints": "Registry claims must be versioned and evidence-backed; test files stay local; avoid reverse-engineering proprietary codecs beyond licensed libraries."
+}
