@@ -4,7 +4,7 @@
 
 - Deployed implementation SHA: `c8e457aa565dddd5cdb0315c97cbb27b491f3a8d`
 - Later verification/test SHA: `8699a467f5c766a10a632d75e854142bb13505ec`
-- Documentation SHA: recorded with this handoff commit
+- Documentation baseline SHA: `7a46da14385c0db5d56fb8f1c5233a2af7b33b67` (report-only; no product artifact change)
 - Live URL: `https://raw-fit-check.sociobot.in`
 - Deployment: Static Web Apps production upload completed on 5 September 2026. The existing single static app was reused.
 
