@@ -15,8 +15,8 @@ function generatedServiceWorker() {
         .filter(file => file.isFile() && /\.(?:js|css)$/.test(file.name))
         .map(file => `/assets/${file.name}`)
         .sort();
-      const shell = ['/', '/privacy/', '/terms/', '/raw-bench-720.webp', '/raw-bench.webp', '/favicon.svg', ...precacheAssets];
-      const shellDocuments = ['index.html', 'privacy/index.html', 'terms/index.html']
+      const shell = ['/', '/demo/', '/privacy/', '/terms/', '/404.html', '/raw-bench-720.webp', '/raw-bench.webp', '/social-card.png', '/apple-touch-icon.png', '/favicon.svg', '/examples/sony-ilce-6700-sample.ARW', ...precacheAssets];
+      const shellDocuments = ['index.html', 'demo/index.html', 'privacy/index.html', 'terms/index.html', '404.html']
         .map(path => readFileSync(resolve(siteOutput, path)));
       const cacheVersion = createHash('sha256')
         .update(shell.join('\n'))
@@ -44,8 +44,10 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(root, 'index.html'),
+        demo: resolve(root, 'demo/index.html'),
         privacy: resolve(root, 'privacy/index.html'),
-        terms: resolve(root, 'terms/index.html')
+        terms: resolve(root, 'terms/index.html'),
+        notFound: resolve(root, '404.html')
       }
     }
   }

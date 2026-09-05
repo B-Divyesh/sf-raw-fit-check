@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "registry_version": "2026.08.1",
-  "updated": "2026-08-28",
+  "registry_version": "2026.09.1",
+  "updated": "2026-09-05",
   "rules": [
     {
       "id": "darktable-4.6-sony-ilce-6700",
@@ -36,15 +36,15 @@
       }
     },
     {
-      "id": "apple-raw-macos13-sony-a6700",
+      "id": "apple-raw-macos14-sony-a6700",
       "camera_make": "SONY",
       "camera_model": "ILCE-6700",
       "extensions": ["arw"],
       "editor": "apple-photos",
-      "min_version": "13.0",
+      "min_version": "14.0",
       "platforms": ["macos"],
       "outcome": "usable",
-      "note": "Apple lists Sony Alpha ILCE-6700 for macOS Ventura 13 RAW support; the editor version here means the macOS major version.",
+      "note": "Apple lists Sony Alpha ILCE-6700 for macOS Sonoma 14 RAW support; the editor version here means the macOS major version.",
       "evidence": {
         "title": "Digital camera RAW formats supported by iOS 17, iPadOS 17, macOS Sonoma, and macOS Ventura",
         "url": "https://support.apple.com/en-us/105094",

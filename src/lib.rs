@@ -165,6 +165,34 @@ pub fn load_registry(path: Option<&Path>) -> Result<Registry, String> {
     {
         return Err("every registry rule must have an evidence URL and access date".into());
     }
+    for rule in &registry.rules {
+        if rule.min_version.is_none() && rule.max_version.is_none() {
+            return Err(format!("registry rule {} needs a version range", rule.id));
+        }
+        for version in [&rule.min_version, &rule.max_version].into_iter().flatten() {
+            parse_version(version)
+                .map_err(|error| format!("registry rule {} has {error}", rule.id))?;
+        }
+        if let (Some(min), Some(max)) = (&rule.min_version, &rule.max_version)
+            && compare_versions(min, max).is_gt()
+        {
+            return Err(format!(
+                "registry rule {} has a minimum version above its maximum",
+                rule.id
+            ));
+        }
+        if rule.platforms.is_empty()
+            || rule
+                .platforms
+                .iter()
+                .any(|platform| !valid_platform(platform))
+        {
+            return Err(format!(
+                "registry rule {} has an unsupported platform",
+                rule.id
+            ));
+        }
+    }
     Ok(registry)
 }
 
@@ -430,18 +458,34 @@ fn field_matches(expected: &str, actual: Option<&str>) -> bool {
     expected == "*" || actual.is_some_and(|v| v.trim().eq_ignore_ascii_case(expected.trim()))
 }
 
+pub fn parse_version(value: &str) -> Result<[u64; 4], String> {
+    if value.is_empty() || value.split('.').count() > 4 {
+        return Err(format!(
+            "invalid version {value:?}; use one to four numeric parts such as 4.6.0"
+        ));
+    }
+    let mut output = [0; 4];
+    for (index, part) in value.split('.').enumerate() {
+        if part.is_empty() || !part.bytes().all(|byte| byte.is_ascii_digit()) {
+            return Err(format!(
+                "invalid version {value:?}; use one to four numeric parts such as 4.6.0"
+            ));
+        }
+        output[index] = part.parse::<u64>().map_err(|_| {
+            format!("invalid version {value:?}; each numeric part must fit in an unsigned 64-bit integer")
+        })?;
+    }
+    Ok(output)
+}
+
 fn compare_versions(a: &str, b: &str) -> std::cmp::Ordering {
-    let nums = |v: &str| {
-        v.split(|c: char| !c.is_ascii_digit())
-            .filter(|s| !s.is_empty())
-            .take(4)
-            .map(|s| s.parse::<u64>().unwrap_or(0))
-            .collect::<Vec<_>>()
-    };
-    let (mut av, mut bv) = (nums(a), nums(b));
-    av.resize(4, 0);
-    bv.resize(4, 0);
+    let av = parse_version(a).expect("reviewed registry versions are validated before matching");
+    let bv = parse_version(b).expect("reviewed registry versions are validated before matching");
     av.cmp(&bv)
+}
+
+fn valid_platform(platform: &str) -> bool {
+    matches!(platform, "linux" | "windows" | "macos" | "*")
 }
 
 #[derive(Debug)]

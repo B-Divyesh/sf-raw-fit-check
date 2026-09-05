@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Run RAW Fit Check with a bundled Sony camera sample. Nothing is saved to your real data.">
+    <meta name="theme-color" content="#f2eedf">
+    <meta property="og:type" content="website"><meta property="og:title" content="Demo — RAW Fit Check"><meta property="og:description" content="Run a local RAW compatibility check with a bundled Sony sample."><meta property="og:image" content="https://raw-fit-check.sociobot.in/social-card.png"><meta property="og:url" content="https://raw-fit-check.sociobot.in/demo/">
+    <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Demo — RAW Fit Check"><meta name="twitter:description" content="Run a local RAW compatibility check with a bundled Sony sample."><meta name="twitter:image" content="https://raw-fit-check.sociobot.in/social-card.png">
+    <title>Demo — RAW Fit Check</title>
+    <link rel="canonical" href="https://raw-fit-check.sociobot.in/demo/"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="stylesheet" href="/src/style.css"><script type="module" src="/src/main.js"></script>
+  </head>
+  <body data-demo="true">
+    <a class="skip-link" href="#main">Skip to main content</a>
+    <header class="topbar"><a class="brand" href="/" aria-label="RAW Fit Check home"><svg aria-hidden="true" viewBox="0 0 40 40" width="32" height="32"><rect x="2" y="2" width="36" height="36" fill="#ffd43b" stroke="currentColor" stroke-width="3"/><path d="m10 21 6 6 14-16" fill="none" stroke="currentColor" stroke-width="4"/></svg><span>RAW / FIT / CHECK</span></a><nav aria-label="Primary navigation"><a href="/demo/" aria-current="page">Demo</a><a href="/#test">Check</a><a href="/#install">CLI</a><a href="/privacy/">Privacy</a></nav><span class="network" id="network-status" role="status"><span aria-hidden="true">●</span> Checking connection</span></header>
+    <main id="main" tabindex="-1">
+      <section class="demo-banner" aria-label="Demo controls"><p><strong>Demo — sample data, nothing is saved</strong><span>This is a synthetic Sony ILCE-6700 file.</span></p><div><button class="button secondary" id="reset-demo" type="button">Reset demo</button><button class="button primary" id="start-real" type="button">Start for real</button></div></section>
+      <section class="tester demo-tester" id="test" aria-labelledby="test-title"><div class="section-heading"><p class="step">Sample check</p><h1 id="test-title">Check a sample RAW file</h1><p>The report starts automatically. Reset loads a clean copy of the same sample.</p></div><div class="test-workbench"><form id="check-form" novalidate><label class="drop-zone" id="drop-zone" for="raw-file"><svg aria-hidden="true" viewBox="0 0 56 56" width="56" height="56"><path d="M8 4h29l11 11v37H8z" fill="none" stroke="currentColor" stroke-width="3"/><path d="M37 4v12h11M18 34h20M28 24v20" fill="none" stroke="currentColor" stroke-width="3"/></svg><span class="drop-title">Use your own RAW</span><span class="drop-detail">Choose one supported camera RAW file instead of the sample.</span><input id="raw-file" name="raw-file" type="file" accept=".nef,.arw,.cr2,.cr3,.dng,.orf,.raf,.rw2,.pef,.srw,.raw" aria-describedby="selected-file" required><span class="button primary choose">Choose a file</span></label><div class="selected-file" id="selected-file" aria-live="polite">Loading the sample file.</div><button class="button primary inspect" id="inspect-button" type="submit" disabled>Inspect locally</button></form><section class="empty-result" id="result-panel" aria-live="polite" aria-atomic="true" aria-label="RAW check result"><div class="registration" aria-hidden="true">+</div><p class="result-label">Loading sample</p><p>The sample report will appear here.</p></section></div></section>
+    </main>
+    <footer><p>RAW Fit Check checks a sample camera RAW file locally.</p><nav aria-label="Footer links"><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="https://github.com/B-Divyesh/sf-raw-fit-check">Source on GitHub</a></nav><p>Built by Param Factory · v0.1.0</p></footer>
+  </body>
+</html>

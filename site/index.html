@@ -3,11 +3,21 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Test a real camera RAW file, embedded preview, editor version, and machine before importing a full shoot.">
+    <meta name="description" content="Check a camera RAW file locally before changing editors on an older or modest computer.">
     <meta name="theme-color" content="#f2eedf">
-    <title>RAW Fit Check — test the file before the workflow</title>
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="RAW Fit Check — check RAW compatibility">
+    <meta property="og:description" content="Check a camera RAW file locally before changing editors on an older or modest computer.">
+    <meta property="og:image" content="https://raw-fit-check.sociobot.in/social-card.png">
+    <meta property="og:url" content="https://raw-fit-check.sociobot.in/">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="RAW Fit Check — check RAW compatibility">
+    <meta name="twitter:description" content="Check a camera RAW file locally before changing editors on an older or modest computer.">
+    <meta name="twitter:image" content="https://raw-fit-check.sociobot.in/social-card.png">
+    <title>RAW Fit Check — check RAW compatibility</title>
+    <link rel="canonical" href="https://raw-fit-check.sociobot.in/">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-    <link rel="preload" as="image" href="/raw-bench.webp" type="image/webp">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="stylesheet" href="/src/style.css">
     <script type="module" src="/src/main.js"></script>
   </head>
@@ -18,91 +28,89 @@
         <svg aria-hidden="true" viewBox="0 0 40 40" width="32" height="32"><rect x="2" y="2" width="36" height="36" fill="#ffd43b" stroke="currentColor" stroke-width="3"/><path d="m10 21 6 6 14-16" fill="none" stroke="currentColor" stroke-width="4"/></svg>
         <span>RAW / FIT / CHECK</span>
       </a>
-      <nav aria-label="Primary navigation">
-        <a href="#test">Run a check</a><a href="#install">Install CLI</a><a href="#method">Method</a>
-      </nav>
+      <nav aria-label="Primary navigation"><a href="/demo/">Demo</a><a href="#test">Check</a><a href="#install">CLI</a><a href="/privacy/">Privacy</a></nav>
       <span class="network" id="network-status" role="status"><span aria-hidden="true">●</span> Checking connection</span>
     </header>
 
     <main id="main" tabindex="-1">
       <section class="hero" aria-labelledby="hero-title">
         <div class="hero-copy">
-          <p class="kicker">Local RAW compatibility preflight · v0.1</p>
-          <h1 id="hero-title">Test the file.<br><span>Then the workflow.</span></h1>
-          <p class="lede">Know whether a real camera RAW is workable, preview-only, or unsupported on this machine—before you migrate an editor or import the whole shoot.</p>
-          <div class="hero-actions"><a class="button primary" href="#test">Check a RAW sample</a><a class="button secondary" href="#install">Get the CLI <span aria-hidden="true">↓</span></a></div>
-          <p class="privacy-note"><strong>No upload.</strong> Your test file stays in this browser tab.</p>
+          <p class="kicker">Local RAW preflight · v0.1</p>
+          <h1 id="hero-title">Check RAW compatibility before changing editors</h1>
+          <p class="lede">For photographers on older or modest computers deciding whether a camera file will work.</p>
+          <div class="hero-actions"><a class="button primary" href="/demo/">Try it with sample data</a><span class="action-detail">Loads a Sony sample and shows its local report.</span><a class="button secondary" href="#test">Choose your file</a></div>
+          <ul class="plain-facts"><li>Files stay in your browser.</li><li>Works offline after your first visit.</li><li>Free to use.</li></ul>
         </div>
         <figure class="hero-visual">
           <div class="frame-number" aria-hidden="true">FRAME 001<br>CHECK / BEFORE / IMPORT</div>
-          <img src="/raw-bench.webp" srcset="/raw-bench-720.webp 720w, /raw-bench.webp 1440w" sizes="(max-width: 820px) calc(100vw - 32px), 560px" width="1440" height="960" alt="Screenprinted contact sheet, camera memory card, and diagnostic waveform on a photographer's workbench" fetchpriority="high">
-          <figcaption>Input → embedded preview → evidence-backed verdict</figcaption>
+          <img src="/raw-bench.webp" srcset="/raw-bench-720.webp 720w, /raw-bench.webp 1440w" sizes="(max-width: 820px) calc(100vw - 32px), 560px" width="1440" height="960" alt="Camera memory card, contact sheet, and diagnostic waveform used to show a local RAW check" fetchpriority="high">
+          <figcaption>Sample file → embedded preview → bounded report</figcaption>
         </figure>
       </section>
 
       <section class="tester section-rule" id="test" aria-labelledby="test-title">
-        <div class="section-heading"><p class="step">01 / Sample</p><h2 id="test-title">Try one file here</h2><p>Choose a representative RAW. The quick check reads its container header and embedded JPEG locally. For editor rules, folders, extraction, and JSON, use the CLI.</p></div>
+        <div class="section-heading"><p class="step">01 / Check</p><h2 id="test-title">Check your own RAW file</h2><p>Choose one representative file. This browser reads its header and embedded JPEG preview locally.</p></div>
         <div class="test-workbench">
           <form id="check-form" novalidate>
             <label class="drop-zone" id="drop-zone" for="raw-file">
               <svg aria-hidden="true" viewBox="0 0 56 56" width="56" height="56"><path d="M8 4h29l11 11v37H8z" fill="none" stroke="currentColor" stroke-width="3"/><path d="M37 4v12h11M18 34h20M28 24v20" fill="none" stroke="currentColor" stroke-width="3"/></svg>
               <span class="drop-title">Drop a camera RAW</span>
-              <span class="drop-detail">or choose one .NEF, .ARW, .CR2, .CR3, .DNG, .ORF, .RAF, .RW2, .PEF, .SRW</span>
-              <input id="raw-file" name="raw-file" type="file" accept=".nef,.arw,.cr2,.cr3,.dng,.orf,.raf,.rw2,.pef,.srw,.raw" required>
+              <span class="drop-detail">Choose .NEF, .ARW, .CR2, .CR3, .DNG, .ORF, .RAF, .RW2, .PEF, or .SRW.</span>
+              <input id="raw-file" name="raw-file" type="file" accept=".nef,.arw,.cr2,.cr3,.dng,.orf,.raf,.rw2,.pef,.srw,.raw" aria-describedby="selected-file" required>
               <span class="button primary choose">Choose a file</span>
             </label>
-            <div class="selected-file" id="selected-file" aria-live="polite">No sample selected.</div>
+            <div class="selected-file" id="selected-file" aria-live="polite">Choose one RAW file to inspect.</div>
             <button class="button primary inspect" id="inspect-button" type="submit" disabled>Inspect locally</button>
           </form>
-          <aside class="empty-result" id="result-panel" aria-live="polite" aria-atomic="true">
+          <section class="empty-result" id="result-panel" aria-live="polite" aria-atomic="true" aria-label="RAW check result">
             <div class="registration" aria-hidden="true">+</div>
-            <p class="result-label">Awaiting specimen</p>
-            <p>Your report will show:</p>
-            <ul><li>Container and camera IDs</li><li>Embedded preview dimensions</li><li>Local decode time</li><li>A conservative verdict</li></ul>
-          </aside>
+            <p class="result-label">Awaiting file</p>
+            <p>Your report includes:</p>
+            <ul><li>Container and camera IDs</li><li>Embedded preview dimensions</li><li>Local preview timing</li><li>A bounded result</li></ul>
+          </section>
         </div>
       </section>
 
       <section class="process section-rule" id="method" aria-labelledby="method-title">
-        <div class="section-heading"><p class="step">02 / Inspect</p><h2 id="method-title">Three checks. No guesswork.</h2></div>
+        <div class="section-heading"><p class="step">02 / Inspect</p><h2 id="method-title">How the check works</h2></div>
         <ol class="process-grid">
-          <li><span class="big-number">01</span><h3>Read the specimen</h3><p>Identifies the RAW container, TIFF/EXIF camera fields, compression tag, and DNG version where present.</p></li>
-          <li><span class="big-number">02</span><h3>Open its preview</h3><p>Finds the largest embedded JPEG and measures decode time on the machine doing the check.</p></li>
-          <li><span class="big-number">03</span><h3>Prove the claim</h3><p>Matches camera, editor, version, and platform only against dated registry evidence you can inspect.</p></li>
+          <li><span class="big-number">01</span><h3>Read the file</h3><p>Read the RAW container and camera fields when they are present.</p></li>
+          <li><span class="big-number">02</span><h3>Decode its preview</h3><p>Find the largest embedded JPEG and time a local decode.</p></li>
+          <li><span class="big-number">03</span><h3>Compare editor evidence</h3><p>Use the CLI to match the camera, editor, version, and platform.</p></li>
         </ol>
       </section>
 
       <section class="verdicts section-rule" aria-labelledby="verdict-title">
-        <div class="section-heading"><p class="step">03 / Decide</p><h2 id="verdict-title">A bounded verdict</h2><p>The tool says only what it can prove. It never treats an embedded JPEG as evidence that sensor data will develop correctly.</p></div>
+        <div class="section-heading"><p class="step">03 / Decide</p><h2 id="verdict-title">Read the result</h2><p>The result stays narrow. A preview does not prove every RAW edit will work.</p></div>
         <div class="verdict-grid">
-          <article class="verdict good"><p class="stamp">✓ Usable</p><h3>Preview + exact rule</h3><p>The preview decodes and this camera/editor/version/platform has a matching supported claim.</p></article>
-          <article class="verdict warn"><p class="stamp">◐ Preview-only</p><h3>Viewing path proven</h3><p>The embedded JPEG works, but full RAW support is not proven for the exact combination.</p></article>
-          <article class="verdict bad"><p class="stamp">× Unsupported</p><h3>Stop and verify</h3><p>No local viewing path was found, or the evidence explicitly excludes the selected combination.</p></article>
+          <article class="verdict good"><p class="stamp">✓ Usable</p><h3>Preview and matching rule</h3><p>The preview decodes and a registry rule matches the exact editor details.</p></article>
+          <article class="verdict warn"><p class="stamp">◐ Preview-only</p><h3>Preview works</h3><p>The embedded JPEG works, but full RAW support is not proven.</p></article>
+          <article class="verdict bad"><p class="stamp">× Unsupported</p><h3>Check another file</h3><p>No local preview works, or the registry excludes the combination.</p></article>
         </div>
       </section>
 
       <section class="install section-rule" id="install" aria-labelledby="install-title">
-        <div class="section-heading"><p class="step">CLI / Full check</p><h2 id="install-title">Take it to the shoot folder</h2><p>Build the single binary with Rust. It makes no network requests and keeps a stable JSON surface for scripts.</p></div>
-        <div class="terminal" aria-label="Installation commands">
+        <div class="section-heading"><p class="step">CLI / Full check</p><h2 id="install-title">Check a shoot folder with the CLI</h2><p>The CLI checks folders, extracts previews, and prints a JSON report for scripts.</p></div>
+        <div class="terminal" aria-label="CLI example">
           <div class="terminal-bar"><span>LOCAL TERMINAL</span><button class="copy-button" type="button" data-copy="cargo install --git https://github.com/B-Divyesh/sf-raw-fit-check">Copy install</button></div>
-          <pre tabindex="0"><code><span class="prompt">$</span> cargo install --git https://github.com/B-Divyesh/sf-raw-fit-check
+          <pre tabindex="0"><code><span class="prompt">$</span> raw-fit-check demo
 
-<span class="comment"># Check 2–5 representative files</span>
+<span class="comment"># Check a representative folder</span>
 <span class="prompt">$</span> raw-fit-check check ~/Pictures/sample \
     --editor darktable --editor-version 4.8.1
 
-<span class="comment"># Save previews + JSON for the migration notes</span>
+<span class="comment"># Save previews and JSON</span>
 <span class="prompt">$</span> raw-fit-check check sample.NEF --preview-dir ./previews --json</code></pre>
         </div>
-        <div class="cli-facts"><p><strong>Exit 0</strong><span>all usable</span></p><p><strong>Exit 2</strong><span>any preview-only</span></p><p><strong>Exit 3</strong><span>any unsupported</span></p><a href="https://github.com/B-Divyesh/sf-raw-fit-check" rel="noreferrer">Source &amp; registry ↗</a></div>
+        <div class="cli-facts"><p><strong>Exit 0</strong><span>usable</span></p><p><strong>Exit 1</strong><span>invalid input</span></p><p><strong>Exit 2</strong><span>preview-only</span></p><p><strong>Exit 3</strong><span>unsupported</span></p></div>
       </section>
 
       <section class="limits section-rule" aria-labelledby="limits-title">
-        <div class="section-heading"><p class="step">Field notes</p><h2 id="limits-title">What this does not promise</h2></div>
-        <div class="notes-grid"><p><strong>No RAW development.</strong> Proprietary sensor data stays untouched.</p><p><strong>No hardware advice.</strong> Decode timing describes this preview, not a whole editing session.</p><p><strong>No mystery database.</strong> Every compatibility rule has a date, source, and version range.</p><p><strong>No shoot-wide certainty.</strong> Sample every compression mode you actually use.</p></div>
+        <div class="section-heading"><p class="step">Limits</p><h2 id="limits-title">What this check does not do</h2></div>
+        <div class="notes-grid"><p>It leaves your RAW file unchanged.</p><p>It does not recommend hardware.</p><p>It does not replace testing a real edit and export.</p><p>It does not upload your selected file.</p></div>
       </section>
     </main>
 
-    <footer><div class="brand footer-brand"><svg aria-hidden="true" viewBox="0 0 40 40" width="28" height="28"><rect x="2" y="2" width="36" height="36" fill="#ffd43b" stroke="currentColor" stroke-width="3"/><path d="m10 21 6 6 14-16" fill="none" stroke="currentColor" stroke-width="4"/></svg><span>RAW / FIT / CHECK</span></div><p>Free, local, evidence-backed. Built for the machine you already own.</p><nav aria-label="Legal"><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="https://github.com/B-Divyesh/sf-raw-fit-check">GitHub</a></nav></footer>
+    <footer><p>RAW Fit Check checks a sample camera RAW file locally.</p><nav aria-label="Footer links"><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="https://github.com/B-Divyesh/sf-raw-fit-check">Source on GitHub</a></nav><p>Built by Param Factory · v0.1.0</p></footer>
   </body>
 </html>

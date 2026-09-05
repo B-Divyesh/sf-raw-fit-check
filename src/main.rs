@@ -1,7 +1,11 @@
-use clap::{Args, Parser, Subcommand};
+use clap::error::ErrorKind;
+use clap::{Args, Parser, Subcommand, ValueEnum};
 use raw_fit_check::{CheckOptions, Registry, Verdict, collect_raw_files, load_registry, run_check};
+use serde::Serialize;
+use std::fs;
 use std::path::PathBuf;
 use std::process::ExitCode;
+use std::time::{SystemTime, UNIX_EPOCH};
 
 #[derive(Parser)]
 #[command(
@@ -21,6 +25,25 @@ enum Command {
     Check(CheckArgs),
     /// Show the built-in evidence-backed compatibility claims
     Registry(RegistryArgs),
+    /// Run the bundled sample in a temporary folder
+    Demo(DemoArgs),
+}
+
+#[derive(Clone, Copy, Debug, ValueEnum)]
+enum Platform {
+    Linux,
+    Windows,
+    Macos,
+}
+
+impl Platform {
+    fn as_str(self) -> &'static str {
+        match self {
+            Self::Linux => "linux",
+            Self::Windows => "windows",
+            Self::Macos => "macos",
+        }
+    }
 }
 
 #[derive(Args)]
@@ -32,11 +55,11 @@ struct CheckArgs {
     #[arg(long, requires = "editor_version")]
     editor: Option<String>,
     /// Installed editor version (for apple-photos, use the macOS version)
-    #[arg(long, requires = "editor")]
+    #[arg(long, requires = "editor", value_parser = validate_version)]
     editor_version: Option<String>,
     /// Override detected platform: linux, windows, or macos
-    #[arg(long)]
-    platform: Option<String>,
+    #[arg(long, value_enum)]
+    platform: Option<Platform>,
     /// Use a reviewed custom registry JSON file
     #[arg(long)]
     registry: Option<PathBuf>,
@@ -64,8 +87,37 @@ struct RegistryArgs {
     json: bool,
 }
 
+#[derive(Args)]
+struct DemoArgs {
+    /// Emit the demonstration report as JSON
+    #[arg(long)]
+    json: bool,
+}
+
+#[derive(Serialize)]
+struct DemoReport {
+    demo_directory: String,
+    sample_file: String,
+    report: raw_fit_check::CheckReport,
+}
+
+fn validate_version(value: &str) -> Result<String, String> {
+    raw_fit_check::parse_version(value).map(|_| value.to_owned())
+}
+
 fn main() -> ExitCode {
-    match execute(Cli::parse()) {
+    let cli = match Cli::try_parse() {
+        Ok(cli) => cli,
+        Err(error) => {
+            let code = match error.kind() {
+                ErrorKind::DisplayHelp | ErrorKind::DisplayVersion => 0,
+                _ => 1,
+            };
+            let _ = error.print();
+            return ExitCode::from(code);
+        }
+    };
+    match execute(cli) {
         Ok(code) => ExitCode::from(code as u8),
         Err(message) => {
             eprintln!("error: {message}");
@@ -86,14 +138,15 @@ fn execute(cli: Cli) -> Result<i32, String> {
             let registry = load_registry(args.registry.as_deref())?;
             let platform = args
                 .platform
-                .unwrap_or_else(|| normalize_platform(std::env::consts::OS).into());
+                .map(Platform::as_str)
+                .unwrap_or(normalize_platform(std::env::consts::OS)?);
             let report = run_check(
                 &files,
                 &registry,
                 &CheckOptions {
                     editor: args.editor.as_deref(),
                     editor_version: args.editor_version.as_deref(),
-                    platform: &platform,
+                    platform,
                     preview_dir: args.preview_dir.as_deref(),
                     benchmark_runs: args.benchmark_runs,
                 },
@@ -108,15 +161,70 @@ fn execute(cli: Cli) -> Result<i32, String> {
             }
             Ok(report.overall.exit_code())
         }
+        Command::Demo(args) => run_demo(args),
     }
 }
 
-fn normalize_platform(platform: &str) -> &str {
-    if platform == "macos" {
-        "macos"
-    } else {
-        platform
+fn normalize_platform(platform: &str) -> Result<&'static str, String> {
+    match platform {
+        "linux" => Ok("linux"),
+        "windows" => Ok("windows"),
+        "macos" | "darwin" => Ok("macos"),
+        _ => Err(format!(
+            "unsupported host platform {platform}; use --platform linux, windows, or macos"
+        )),
     }
+}
+
+fn run_demo(args: DemoArgs) -> Result<i32, String> {
+    let nonce = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map_err(|error| error.to_string())?
+        .as_millis();
+    let directory =
+        std::env::temp_dir().join(format!("raw-fit-check-demo-{}-{nonce}", std::process::id()));
+    fs::create_dir_all(&directory).map_err(|error| {
+        format!(
+            "could not create demo folder {}: {error}",
+            directory.display()
+        )
+    })?;
+    let sample = directory.join("sony-ilce-6700-sample.ARW");
+    fs::write(
+        &sample,
+        include_bytes!("../examples/sony-ilce-6700-sample.ARW"),
+    )
+    .map_err(|error| format!("could not write bundled demo sample: {error}"))?;
+    let registry = load_registry(None)?;
+    let platform = normalize_platform(std::env::consts::OS)?;
+    let files = collect_raw_files(std::slice::from_ref(&sample))?;
+    let report = run_check(
+        &files,
+        &registry,
+        &CheckOptions {
+            editor: Some("darktable"),
+            editor_version: Some("4.6.0"),
+            platform,
+            preview_dir: Some(&directory),
+            benchmark_runs: 3,
+        },
+    );
+    if args.json {
+        println!(
+            "{}",
+            serde_json::to_string_pretty(&DemoReport {
+                demo_directory: directory.display().to_string(),
+                sample_file: sample.display().to_string(),
+                report: report.clone(),
+            })
+            .map_err(|error| error.to_string())?
+        );
+    } else {
+        println!("DEMO OUTPUT: {}", directory.display());
+        println!("The bundled sample is copied here; your own files are not read.");
+        print_human(&report, true);
+    }
+    Ok(report.overall.exit_code())
 }
 
 fn print_registry(registry: &Registry, json: bool) -> Result<(), String> {

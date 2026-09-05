@@ -42,6 +42,8 @@ Only state changes move: the result drawer enters 12px from its originating form
 ## Asset plan and provenance
 
 - `site/public/raw-bench.webp` and responsive `raw-bench-720.webp`: original generated hero still life—an opened RAW file cartridge, camera memory card, contact-sheet crop marks, and a small diagnostic oscilloscope trace. It explains “inspect the file before the workflow.” Generated for this product with `/opt/fleet/lib/gen-image.sh`, factory-image model, then converted locally to WebP. Prompt: “Neo-brutalist editorial still life for a RAW photo compatibility diagnostic; overhead view of an unbranded black camera memory card, a cream contact sheet with crop marks, a small waveform/diagnostic strip, hard ink outlines, warm paper, inspection yellow and cobalt blue, coarse screenprint texture, asymmetrical horizontal composition, no people, no logos, no readable text, no gradients, generous negative space.” Original generation; project use.
+- `site/public/social-card.png` and `apple-touch-icon.png`: deterministic local crops of the original hero artwork for sharing and device icons. They add no third-party artwork or text.
+- `examples/sony-ilce-6700-sample.ARW` and `site/public/examples/sony-ilce-6700-sample.ARW`: hand-built synthetic TIFF-style test files with a locally generated geometric 320×240 JPEG preview. They contain no proprietary RAW sensor data or photograph.
 - Inline SVG marks (logo aperture/check and verdict symbols) are hand-authored geometric assets in the site source; no external icon set.
 
 All assets ship locally. No stock art, remote font, runtime CDN, or tracking asset is used.

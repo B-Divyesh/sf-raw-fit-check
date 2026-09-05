@@ -1,86 +1,91 @@
 # RAW Fit Check
 
-RAW Fit Check is a local preflight for photographers deciding whether real camera files will be viewable on a particular editor and machine. It identifies TIFF-based RAW containers, camera metadata and embedded JPEG previews, checks a versioned evidence registry, measures preview decoding, and produces a plain-text or JSON report.
+RAW Fit Check is a local CLI for photographers who need to check a camera RAW file before changing editors. It reads container metadata and an embedded JPEG preview, then compares the camera, editor, version, and platform with a dated registry.
 
-Files never leave the computer. RAW Fit Check does not develop RAW sensor data or recommend hardware; its `usable`, `preview-only`, and `unsupported` verdicts are deliberately bounded by the evidence it can inspect.
+## Try the demo
+
+Run the bundled synthetic Sony ILCE-6700 sample without touching your own files:
+
+```sh
+cargo run -- demo
+```
+
+The command copies the sample into a new temporary folder, prints that folder, extracts its preview, and reports the result. The web demo is at `https://raw-fit-check.sociobot.in/demo/`.
 
 ## Install
 
-Download a release binary for your platform, or build with Rust 1.85+:
+Build and install from a checkout with Rust:
 
 ```sh
 cargo install --path .
 ```
 
-## Usage
-
-Check a representative folder before importing the whole shoot:
+## Check a folder
 
 ```sh
 raw-fit-check check ~/Pictures/sample \
   --editor darktable --editor-version 4.8.1
 ```
 
-Save extracted previews and a machine-readable report:
+Write extracted previews and a JSON report:
 
 ```sh
 raw-fit-check check DSC_0042.NEF DSC_0043.NEF \
-  --editor rawtherapee --editor-version 5.10 \
+  --editor darktable --editor-version 4.8.1 \
   --preview-dir ./previews --json > fit-report.json
 ```
 
-Inspect the transparent built-in claims and their sources:
+`--editor-version` accepts one to four numeric parts, such as `4.8.1`. Use `--platform linux`, `windows`, or `macos` to test a different platform. The CLI rejects malformed versions and unsupported platform names as invalid input.
+
+## Read a result
+
+- `usable` means the embedded preview decodes and a registry rule matches the selected editor details.
+- `preview-only` means the embedded preview decodes, but the editor combination lacks a matching rule.
+- `unsupported` means there is no local preview or a matching rule explicitly excludes the combination.
+
+Exit code `0` means usable, `1` invalid input, `2` preview-only, and `3` unsupported. `--ci` prints the report without prompts.
+
+## Inspect the registry
 
 ```sh
 raw-fit-check registry
 raw-fit-check registry --json
 ```
 
-Use a reviewed custom registry (same schema as `registry/compatibility.json`):
+The built-in registry includes a source date, HTTPS source URL, and numeric version range for every rule. Use a reviewed custom registry with the same schema:
 
 ```sh
 raw-fit-check check sample.ARW --registry team-registry.json --json
 ```
 
-Registry changes should be narrow: use the exact camera make/model strings written by the file, a normalized editor slug, an explicit version range and platform list, and a first-party evidence URL with an access date. Unsupported claims require affirmative evidence or a clearly dated absence from an exhaustive vendor list. Increment `registry_version` whenever a claim changes.
+## Browser check and privacy
 
-Exit codes are `0` when every file is usable, `2` when any file is preview-only, `3` when any file is unsupported, and `1` for invalid input or an unreadable registry. `--ci` disables decorative output; the CLI never prompts.
+The landing-page checker reads a selected file in the browser. It reports the container, camera ID, preview dimensions, and local timing. It returns `preview-only` rather than an editor verdict. The selected file is not uploaded or saved as a report.
 
-## What a verdict means
+After the first visit, the public app shell and bundled demo sample work offline. The demo uses its own `demo:` session-storage key and never reads a real selected file. It requires no account or payment step.
 
-- `usable`: the file contains an identifiable supported container and the selected editor/version/platform matches an evidence-backed registry rule.
-- `preview-only`: RAW Fit Check can extract and decode an embedded JPEG, but full RAW support is not proven for that exact combination.
-- `unsupported`: the file cannot be inspected, lacks a usable embedded preview, or a matching registry rule explicitly excludes the combination.
-
-Start with 2–5 representative files, including each compression mode used in-camera. A green result is a preflight, not a replacement for testing edits and exports in the chosen editor.
-
-## Develop and verify
+## Develop, test, package, and deploy
 
 ```sh
-cargo test
-cargo build --release
 npm ci
-npm run lint             # cargo fmt + Clippy with warnings denied
 npm test
-npm run build:site       # static site -> dist/site
-npm run build            # release CLI + static site
-npm run package:cli      # archives the local release binary in dist/
+npm run build
+npm run package:cli
+npm run test:consumer
 ```
 
-The browser preflight on the landing page performs the same conservative header/preview checks entirely in-browser. It is useful for a quick sample; the CLI adds directory traversal, registry overrides, extraction, benchmarking, and stable JSON. The production build generates a versioned service-worker precache that includes the emitted hashed JavaScript and CSS, so the local checker still works after an offline reload.
+`npm test` runs formatting, Clippy, Rust tests, browser checks, and every public claim. The claim manifest is `.factory/claims.json`; run one claim with its documented command. `npm run build` creates `target/release/raw-fit-check` and `dist/site/`. `npm run package:cli` produces the Linux archive in `dist/`. `npm run test:consumer` packages the crate, installs it into a fresh temporary prefix, and runs the installed binary.
 
-Deploy the contents of `dist/site/` unchanged. It includes both `_headers` and `staticwebapp.config.json`, which set immutable caching for hashed assets, keep `sw.js` updateable, and apply the site’s `no-referrer` and permissions policies.
+Deploy the contents of `dist/site/` unchanged. It contains the response policy, service worker, `404.html`, and all static assets.
 
 ## Repository map
 
 - `src/` — Rust CLI and library
-- `registry/compatibility.json` — versioned, evidence-backed compatibility claims
-- `site/` — dependency-light landing page and local browser preflight
-- `.factory/design.md` — visual system and asset provenance
-
-## Privacy and limitations
-
-There is no telemetry, account, upload, or network request in the CLI or site. See the site privacy page for the complete policy. Proprietary RAW sensor data is not reverse-engineered; the tool reads TIFF/EXIF metadata and embedded JPEG previews and makes only registry-backed editor claims.
+- `examples/` — synthetic bundled RAW sample
+- `registry/compatibility.json` — versioned compatibility rules
+- `site/` — static landing page and browser sample check
+- `.factory/claims.json` — public claims and their sandbox checks
+- `.factory/demo.md` — demo isolation details
 
 ## License
 

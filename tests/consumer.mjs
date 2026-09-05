@@ -1,0 +1,21 @@
+import assert from 'node:assert/strict';
+import { spawnSync } from 'node:child_process';
+import { copyFile, mkdtemp, readFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+
+const pack = spawnSync('cargo', ['package', '--locked', '--allow-dirty'], { encoding: 'utf8', timeout: 120_000 });
+assert.equal(pack.status, 0, pack.stderr);
+const consumer = await mkdtemp(join(tmpdir(), 'raw-fit-check-consumer-'));
+const unpack = spawnSync('tar', ['-xzf', 'target/package/raw-fit-check-0.1.0.crate', '-C', consumer], { encoding: 'utf8' });
+assert.equal(unpack.status, 0, unpack.stderr);
+const root = join(consumer, 'install');
+const install = spawnSync('cargo', ['install', '--path', join(consumer, 'raw-fit-check-0.1.0'), '--root', root, '--locked'], { encoding: 'utf8', timeout: 120_000 });
+assert.equal(install.status, 0, install.stderr);
+const sample = join(consumer, 'sample.ARW');
+await copyFile('examples/sony-ilce-6700-sample.ARW', sample);
+const binary = join(root, 'bin', process.platform === 'win32' ? 'raw-fit-check.exe' : 'raw-fit-check');
+const result = spawnSync(binary, ['check', sample, '--editor', 'darktable', '--editor-version', '4.6.0', '--platform', 'linux', '--json'], { encoding: 'utf8' });
+assert.equal(result.status, 0, result.stderr);
+assert.equal(JSON.parse(result.stdout).overall, 'usable');
+assert.ok((await readFile(sample)).length > 0);
