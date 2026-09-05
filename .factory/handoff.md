@@ -1,44 +1,38 @@
-# RAW Fit Check v0.1.0 — independent verification handoff
+# RAW Fit Check review 1 handoff
 
 ## Release status: FAIL
 
-Candidate `fa95b70bf957be224db91e9ff58c939aa724baa4` was independently verified on 2026-08-28 against `https://raw-fit-check.sociobot.in/`. Full evidence is in `.factory/verification-3.md`.
+Review 1 was completed on 5 September 2026. The live product matches implementation commit `7b15055729de4708776740963b273b30ac53fb34`; the documentation baseline was `f8e5106dc1a8dac8d8261a3b03be74f41f6b2632`.
 
-The previous deployment-only failures are repaired: the live site exactly matches the candidate build, immutable asset caching and privacy headers are correct, and a cache-only offline reload remains functional. The release still fails because fresh testing found core CLI correctness defects.
+The full evidence and all 14 findings are in `.factory/review-1.md`. There are 32 public claims without the required claim manifest and tagged sandbox tests.
 
-## Release blockers
+## What was reviewed
 
-1. **Unsupported evidence boundary can return `usable`.** The Sony ILCE-6700 Apple rule returns `usable` for macOS 13.0, but its cited Apple page is explicitly for macOS Sonoma/macOS 14 and contains no Ventura reference. The claimed minimum version 13 is not evidence-backed.
-2. **Malformed versions can return `usable`.** `banana-4.6.0`, `4.6.0-beta`, and `4.6x` all match the darktable `>=4.6.0` rule and return exit 0 because the comparator discards nondigits.
-3. **Exit-code contract collides.** Missing required options, invalid benchmark values, and unknown commands return 2, although 2 is documented as the successful `preview-only` classification and invalid input is documented as 1.
+- Fresh desktop and phone browser contexts against production
+- First screen, normal/invalid/recovery paths, keyboard, focus, reduced motion, mobile reflow, touch targets, privacy, links, legal pages, offline/update behavior, and 404 handling
+- Clean checkout install, test, build, package, and a clean installed-CLI consumer flow
+- Usable, preview-only, unsupported, malformed version, invalid platform, invalid registry, recursive folder, extraction, no-overwrite, JSON, and exit-code paths
+- Every finding in `.factory/verification-2.md` and `.factory/verification-3.md`
+- Live/build byte identity, response headers, bundle budgets, and Lighthouse mobile
 
-Additional defects: multiple mobile links are below 44×44 px; axe reports one moderate nested-complementary-landmark issue (zero serious/critical).
+## Verification summary
 
-## Passing evidence
+`cargo test --locked --all-targets`, `npm test`, `npm run build`, `cargo package --locked`, and `npm run package:cli` pass after a clean dependency install. Lighthouse scores are 100 in all four categories. The local browser checker works offline and makes no upload or storage request during the checked flow.
 
-From a detached clean checkout of the candidate:
+The release remains blocked by the missing demo and claim system; the false Apple/macOS 13 rule; malformed version acceptance; parser/preview-only exit collision; the broken generic 404; and the remaining site, accessibility, and copy findings.
 
-```sh
-npm ci                              # PASS, 0 vulnerabilities
-cargo test --locked --all-targets  # PASS, 7 tests
-npm test                            # PASS: fmt, Clippy -D warnings, unit, build policy, Playwright
-npm run build                       # PASS: release CLI + dist/site
-cargo package --locked              # PASS, 39 files
-npm run package:cli                 # PASS, Linux x64 archive
-```
+## Evidence files
 
-- The packaged crate installed into an isolated prefix; the installed CLI, registry JSON, and a separate Rust public-API consumer worked.
-- Normal CLI cases correctly exercised `usable`/0, `preview-only`/2, and `unsupported`/3; recursive folders, JSON, extraction/no-overwrite, benchmark bounds, corrupt files, missing inputs, and invalid registries were covered.
-- Live HTML, JS, CSS, service worker, privacy, and terms are byte-identical to the clean build.
-- Desktop 1280 px and mobile 390 px checks across `/`, `/privacy/`, and `/terms/` had no overflow, console/page errors, failed requests, or axe serious/critical findings. Keyboard file selection, visible focus, invalid-file recovery, and reduced motion passed.
-- Privacy passed: same-origin-only runtime requests; no cookies, analytics, local/session storage, IndexedDB, uploads, remote fonts/scripts, or persisted RAW/report data.
-- Service-worker update and cold-cache offline reload passed; the offline checker still decoded the representative RAW preview.
-- Live response policy passed: HTTPS redirect, one-year immutable caching for hashed assets, `no-cache` worker, HSTS, `nosniff`, `no-referrer`, and camera/microphone/geolocation restrictions.
-- Lighthouse 13 mobile: Performance 100, Accessibility 100, Best Practices 100, SEO 100; LCP 1,087 ms, TBT 50.5 ms, CLS 0, transfer 119,689 B.
-- Payload: JS 7,248 B (3,349 B gzip), CSS 10,060 B (3,038 B gzip), no fonts, images within budget.
+- `.factory/review-1.md`
+- `/work/.evidence/qa-report.md`
+- `/work/.evidence/qa-result.json`
+- `/work/.evidence/live-browser-audit.json`
+- `/work/.evidence/lighthouse-mobile.json`
+- `/work/.evidence/screenshot-desktop.png`
+- `/work/.evidence/screenshot-mobile.png`
 
-## Next steps
+## Next step
 
-Correct/narrow the Apple OS rule with stable evidence and increment the registry version; validate versions before matching; remove the parser/verdict exit-code collision; enlarge mobile hit areas; then deploy and repeat the package, evidence, browser, offline, and Lighthouse checks from `.factory/verification-3.md`.
+Repair every finding in `.factory/review-1.md`, deploy the new implementation, then run an independent review with a complete claims manifest. Do not publish the CLI or mark the product accepted before that review passes with zero findings and zero untested claims.
 
-No product code was modified during verification. Do not publish the CLI until the M1 defects are repaired and independently re-verified.
+No product code was changed in this review.
